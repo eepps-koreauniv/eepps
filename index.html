@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EEPPS — Lab. of Environmental Ecological Planning &amp; Policy Studies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="brand-cluster">
+    <a href="#main">
+      <img class="eepps-logo" src="assets/eepps-logo.png" alt="EEPPS">
+    </a>
+    <span class="brand-divider"></span>
+    <a href="https://www.korea.ac.kr/sites/ko/index.do" target="_blank" rel="noopener">
+      <img class="ku-logo-sm" src="assets/ku-logo.png" alt="Korea University">
+    </a>
+  </div>
+  <nav class="pill-nav" id="nav-list"></nav>
+  <div class="lang-toggle" id="lang-toggle">
+    <button type="button" data-lang="ko">KO</button>
+    <button type="button" data-lang="en">EN</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<section id="main">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-row">
+    <div class="hero-copy">
+      <h1 id="hero-title"></h1>
+      <p class="lead" id="hero-lead"></p>
+    </div>
+    <div class="hero-stats" id="hero-stats"></div>
+  </div>
+
+  <div class="hero-grid">
+    <div class="hero-side">
+      <div class="side-card-a glass">
+        <span class="since" id="side-since"></span>
+        <div>
+          <p class="title" id="side-title"></p>
+          <a href="#people" class="cta" id="side-cta"></a>
+        </div>
+      </div>
+      <div class="side-card-b glass">
+        <div class="logos">
+          <a href="https://www.korea.ac.kr/sites/ko/index.do" target="_blank" rel="noopener">
+            <img class="ku-logo" src="assets/ku-logo.png" alt="Korea University">
+          </a>
+          <a href="https://eco.korea.ac.kr/" target="_blank" rel="noopener">
+            <img class="eco-logo" src="assets/eco-dept-logo.png" alt="환경생태공학부">
+          </a>
+        </div>
+        <div>
+          <p class="dept-title" id="dept-title"></p>
+          <a href="https://eco.korea.ac.kr/" target="_blank" rel="noopener" class="dept-cta" id="dept-cta"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-image" id="hero-image">
+      <div class="hero-image-ctas">
+        <div class="btn-group">
+          <a href="#research" class="pill-white" id="explore-cta"></a>
+          <a href="#contact" class="pill-dark" id="work-cta"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scope-wrap">
+    <div class="scope-head">
+      <h2 class="section-title"><span class="hl" id="scope-title"></span></h2>
+    </div>
+    <div class="scope-grid" id="scope-grid">
+      <div class="scope-pulse" aria-hidden="true"></div>
+      <!-- scale cards + core band injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- PEOPLE -->
+<section id="people">
+  <div class="section-head">
+    <h2 class="section-title" id="people-title"></h2>
+  </div>
+
+  <div class="pi-card" id="pi-card">
+    <div class="pi-portrait" id="pi-portrait"></div>
+    <div>
+      <span class="pi-role" id="pi-role"></span>
+      <h3 class="pi-name" id="pi-name"></h3>
+      <p class="pi-bio" id="pi-bio"></p>
+      <a href="#contact" class="pi-email" id="pi-email-cta"></a>
+    </div>
+  </div>
+
+  <div class="groups" id="groups-container"></div>
+</section>
+
+<!-- RESEARCH -->
+<section id="research">
+  <div class="section-head">
+    <h2 class="section-title" id="research-title"></h2>
+  </div>
+
+  <div class="pub-panel">
+    <div class="pub-panel-head">
+      <p class="pub-panel-title" id="pub-panel-title"></p>
+      <div class="filters" id="filters"></div>
+    </div>
+    <div id="pub-rows"></div>
+    <div class="pub-footer">
+      <span class="pub-count" id="pub-count"></span>
+      <div id="pub-footer-action"></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-panel">
+    <div>
+      <h2 class="contact-title" id="contact-title"></h2>
+      <p class="contact-lead" id="contact-lead"></p>
+      <div class="contact-rows" id="contact-rows"></div>
+    </div>
+    <div class="contact-photo">
+      <img src="assets/lab-group-photo.png" alt="EEPPS lab group photo">
+      <div class="overlay" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="site-footer">
+    <span id="footer-left"></span>
+    <span id="footer-right"></span>
+  </div>
+</section>
+
+<script src="content.js"></script>
+<script src="roster.js"></script>
+<script src="publications.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
