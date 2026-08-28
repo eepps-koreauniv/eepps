@@ -117,6 +117,35 @@
     document.getElementById('work-cta').textContent = copy.workCta;
   }
 
+  // Same multi-extension fallback as setPhoto, but for the research-scope
+  // map slots (assets/scope-local.png, scope-national.jpg, etc. — mixed
+  // extensions since photos get dropped in by hand).
+  function setScopeMapImage(container, baseName, alt, placeholderCaption) {
+    container.classList.remove('stripe-pattern');
+    container.innerHTML = '';
+    if (!baseName) {
+      container.classList.add('stripe-pattern');
+      container.appendChild(el('span', 'stripe-caption', placeholderCaption || ''));
+      return;
+    }
+    var img = document.createElement('img');
+    img.alt = alt || '';
+    img.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;';
+    var extIdx = 0;
+    function tryNextExtension() {
+      if (extIdx >= PHOTO_EXTENSIONS.length) {
+        container.classList.add('stripe-pattern');
+        container.innerHTML = '<span class="stripe-caption">' + (placeholderCaption || '') + '</span>';
+        return;
+      }
+      img.src = 'assets/' + encodeURIComponent(baseName) + '.' + PHOTO_EXTENSIONS[extIdx] + '?v=' + CACHE_BUST;
+      extIdx++;
+    }
+    img.onerror = tryNextExtension;
+    container.appendChild(img);
+    tryNextExtension();
+  }
+
   function renderScope() {
     var copy = t();
     document.getElementById('scope-title').textContent = copy.scopeTitleFull;
@@ -134,16 +163,11 @@
 
       card.classList.add('scale-pos-' + i);
 
-      var isRegional = i === 1; // real asset available for the regional-scale card
-      var map = el('div', 'scale-map' + (isRegional ? '' : ' stripe-pattern'));
-      if (isRegional) {
-        var img = document.createElement('img');
-        img.src = 'assets/scope-regional.png?v=' + CACHE_BUST;
-        img.alt = label;
-        map.appendChild(img);
-      } else {
-        map.appendChild(el('span', 'stripe-caption', mapNote));
-      }
+      // Real map images are available for local/regional/national; international
+      // still has no asset, so it keeps the striped placeholder.
+      var SCALE_MAP_BASENAMES = ['scope-local', 'scope-regional', 'scope-national', null];
+      var map = el('div', 'scale-map');
+      setScopeMapImage(map, SCALE_MAP_BASENAMES[i], label, mapNote);
       card.appendChild(map);
 
       var topicsWrap = el('div', 'scale-topics');
