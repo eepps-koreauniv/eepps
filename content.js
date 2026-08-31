@@ -6,7 +6,10 @@
  */
 window.COPY = {
   ko: {
-    nav: ['메인', '소속인원', '연구업적', '연락처'],
+    nav: ['메인', '소속인원', '연구업적', '게시판', '연락처'],
+    boardTitleFull: '게시판',
+    boardBackCta: '목록으로',
+    boardEmpty: '아직 게시글이 없습니다.',
     heroLine1: '환경생태계획 및',
     heroHl: '정책학 연구실', heroLine2: '',
     heroLead: 'EEPPS는 다학제적 접근 방식을 통해 사회, 경제, 환경적 요소를 통합하여\n과학적이고, 신뢰성 높은 환경 정책을 개발하는 데에 이바지하고 있습니다.',
@@ -70,7 +73,10 @@ window.COPY = {
     footerRight: '고려대학교 환경생태공학과'
   },
   en: {
-    nav: ['Main', 'People', 'Research', 'Contact'],
+    nav: ['Main', 'People', 'Research', 'Board', 'Contact'],
+    boardTitleFull: 'Board',
+    boardBackCta: 'Back to list',
+    boardEmpty: 'No posts yet.',
     heroLine1: 'Lab. of Environmental',
     heroHl: 'Ecological Planning', heroLine2: '& Policy Studies',
     heroLead: 'EEPPS studies planning and policy alternatives for the coexistence of cities and nature, grounded in ecosystem services and spatial data.',
