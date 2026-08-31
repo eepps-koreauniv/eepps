@@ -65,7 +65,7 @@ a:hover { color: var(--link-hover); }
 ::selection { background: var(--accent); }
 button { font-family: inherit; cursor: pointer; }
 
-.kr { font-family: 'Pretendard Variable', sans-serif; }
+.kr { font-family: 'Pretendard Variable', sans-serif; word-break: keep-all; }
 
 @keyframes eepps-pulse {
   0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.85; }
