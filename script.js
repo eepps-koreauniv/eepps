@@ -3,7 +3,7 @@
 
   var SECTION_IDS = ['main', 'people', 'research', 'board', 'contact'];
   var NAV_GLYPHS = ['◎', '✳', '◇', '▤', '✦'];
-  var PUB_PAGE_SIZE = 10;
+  var PUB_PAGE_SIZE = 25;
 
   // Photo files get replaced under the same filename (e.g. someone re-saves
   // "33.png" with a different person's photo), and browsers then keep
