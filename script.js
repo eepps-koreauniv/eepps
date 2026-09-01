@@ -453,8 +453,6 @@
         var link = el('a', 'link', '↗');
         link.href = normalizeUrl(p.link); link.target = '_blank'; link.rel = 'noopener';
         row.appendChild(link);
-      } else {
-        row.appendChild(el('span', 'link', '↗'));
       }
       rows.appendChild(row);
     });
