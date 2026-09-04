@@ -277,17 +277,49 @@
     var container = document.getElementById('groups-container');
     container.innerHTML = '';
 
-    function buildMemberCard(name, sub, topic, photoFile, linksRaw) {
+    function buildMemberCard(name, sub, topic, photoFile, linksRaw, roleBadge) {
       var card = el('div', 'member-card');
       var photo = el('div', 'member-photo');
       card.appendChild(photo);
       setPhoto(photo, photoFile, name);
+      if (roleBadge) {
+        var top = el('div', 'alumni-top');
+        var badges = el('div', 'alumni-badges');
+        badges.appendChild(el('span', 'alumni-role', roleBadge));
+        top.appendChild(badges);
+        card.appendChild(top);
+      }
       var textBlock = el('div', 'member-text');
       var names = el('div', 'member-names');
       names.appendChild(el('p', 'kr-name', name));
       if (sub) names.appendChild(el('p', 'en-name', sub));
       textBlock.appendChild(names);
       textBlock.appendChild(el('p', 'member-topic kr', topic || ''));
+      card.appendChild(textBlock);
+      var linkRow = buildLinkButtons(linksRaw);
+      if (linkRow) card.appendChild(linkRow);
+      return card;
+    }
+
+    // Same visual treatment as an Alumni card (degree badge, no research
+    // topic) — used for Alumni themselves, and for a 연구원 who has already
+    // graduated (has a Year of Graduation + Degree on file).
+    function buildAlumniStyleCard(name, sub, degreeText, photoFile, linksRaw, roleBadge) {
+      var card = el('div', 'member-card alumni-card');
+      var photo = el('div', 'member-photo alumni-photo');
+      card.appendChild(photo);
+      setPhoto(photo, photoFile, name);
+      var top = el('div', 'alumni-top');
+      var badges = el('div', 'alumni-badges');
+      badges.appendChild(el('span', 'alumni-degree', degreeText || ''));
+      if (roleBadge) badges.appendChild(el('span', 'alumni-role', roleBadge));
+      top.appendChild(badges);
+      card.appendChild(top);
+      var textBlock = el('div', 'member-text');
+      var names = el('div', 'member-names alumni-names');
+      names.appendChild(el('p', 'kr-name', name));
+      if (sub) names.appendChild(el('p', 'en-name', sub));
+      textBlock.appendChild(names);
       card.appendChild(textBlock);
       var linkRow = buildLinkButtons(linksRaw);
       if (linkRow) card.appendChild(linkRow);
@@ -307,9 +339,19 @@
         var grid = el('div', 'member-grid');
         g.members.forEach(function (m) {
           var disp = RosterHelpers.personDisplay(state.lang, m['Name(KOR)'], m['Name(ENG)']);
-          var topic = RosterHelpers.cleanTopic(m['Research(ENG)']);
           var photoFile = RosterHelpers.photoFileFor(m['NO']);
-          grid.appendChild(buildMemberCard(disp.name, disp.sub, topic, photoFile, m[URL_FIELD]));
+          var hier = (m['Hier'] || '').trim();
+          var isResearcherOrIntern = hier === '연구원' || hier === '연구 인턴';
+          var roleBadge = !isResearcherOrIntern ? null : hier === '연구원'
+            ? (state.lang === 'en' ? 'Researcher' : '연구원')
+            : (state.lang === 'en' ? 'Research Intern' : '연구 인턴');
+          if (isResearcherOrIntern && m['Year of Graduation'] && m['Degree']) {
+            var degreeText = RosterHelpers.degreeLine(state.lang, m['Year of Graduation'], m['Degree']);
+            grid.appendChild(buildAlumniStyleCard(disp.name, disp.sub, degreeText, photoFile, m[URL_FIELD], roleBadge));
+          } else {
+            var topic = RosterHelpers.cleanTopic(m['Research(ENG)']);
+            grid.appendChild(buildMemberCard(disp.name, disp.sub, topic, photoFile, m[URL_FIELD], roleBadge));
+          }
         });
         wrap.appendChild(grid);
         container.appendChild(wrap);
@@ -362,22 +404,7 @@
         } else {
           name = a[0]; sub = a[1]; degree = a[2]; photoFile = null; linksRaw = null;
         }
-        var card = el('div', 'member-card alumni-card');
-        var photo = el('div', 'member-photo alumni-photo');
-        card.appendChild(photo);
-        setPhoto(photo, photoFile, name);
-        var top = el('div', 'alumni-top');
-        top.appendChild(el('span', 'alumni-degree', degree || ''));
-        card.appendChild(top);
-        var textBlock = el('div', 'member-text');
-        var names = el('div', 'member-names alumni-names');
-        names.appendChild(el('p', 'kr-name', name));
-        if (sub) names.appendChild(el('p', 'en-name', sub));
-        textBlock.appendChild(names);
-        card.appendChild(textBlock);
-        var linkRow = buildLinkButtons(linksRaw);
-        if (linkRow) card.appendChild(linkRow);
-        alumniGrid.appendChild(card);
+        alumniGrid.appendChild(buildAlumniStyleCard(name, sub, degree, photoFile, linksRaw));
       });
       alumniWrap.appendChild(alumniGrid);
     }

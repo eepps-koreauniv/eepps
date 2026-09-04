@@ -314,7 +314,9 @@ nav.pill-nav { display: flex; gap: 8px; justify-self: center; }
 .member-topic { margin: 0; font-family: 'Pretendard Variable', sans-serif; font-size: 15px; line-height: 1.5; color: var(--text-secondary); }
 
 .alumni-top { display: flex; align-items: center; justify-content: space-between; }
-.alumni-degree { padding: 6px 12px; border-radius: var(--r-pill); background: var(--surface-2); font-size: 12px; color: var(--text-dark2); }
+.alumni-badges { display: flex; gap: 12px; flex-wrap: wrap; }
+.alumni-degree { padding: 6px 12px; border-radius: var(--r-pill); background: var(--accent); font-size: 12px; color: var(--brand); }
+.alumni-role { padding: 6px 12px; border-radius: var(--r-pill); background: var(--surface-2); font-size: 12px; color: var(--text-dark2); }
 .alumni-names .kr-name { font-size: 22px; }
 
 /* ---------- Research ---------- */

@@ -9,13 +9,13 @@
 
   window.ROSTER_CSV_URL = 'https://docs.google.com/spreadsheets/d/16fKwuCve-G3qOtYmu8_9GkZyRXt6n3OH/export?format=csv&gid=515412475';
 
-  var GROUP_ORDER = ['연구교수', '박사 수료', '박사 과정', '석사 과정', '연구 인턴'];
+  var GROUP_ORDER = ['연구교수', '박사 수료', '박사 과정', '석사 과정'];
   var GROUP_LABELS = {
     '연구교수': { ko: '연구교수', en: 'Research Professor' },
     '박사 수료': { ko: '박사 수료', en: 'Ph.D. Candidate' },
     '박사 과정': { ko: '박사 과정', en: 'Ph.D. Students' },
     '석사 과정': { ko: '석사 과정', en: 'M.S. Students' },
-    '연구 인턴': { ko: '연구 인턴', en: 'Research Interns' }
+    'researcher_intern': { ko: '연구원 · 연구 인턴', en: 'Researcher · Research Intern' }
   };
   var DEGREE_LABEL = {
     '박사': { ko: '박사', en: 'Ph.D.' },
@@ -130,6 +130,11 @@
           members: people.filter(function (r) { return r['Hier'].trim() === key; })
         };
       }).filter(function (g) { return g.members.length > 0; });
+
+      // 연구원 and 연구 인턴 share one combined section, researchers first.
+      var researchIntern = people.filter(function (r) { return r['Hier'].trim() === '연구원'; })
+        .concat(people.filter(function (r) { return r['Hier'].trim() === '연구 인턴'; }));
+      if (researchIntern.length) groups.push({ key: 'researcher_intern', members: researchIntern });
 
       return { pi: pi, alumni: alumni, groups: groups };
     });

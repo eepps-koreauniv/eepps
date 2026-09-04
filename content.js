@@ -86,7 +86,7 @@ window.COPY = {
     teamCta: 'Our Team',
     deptCardTitle: 'Korea University\nDiv. of Environmental Science & Ecological Engineering', deptCardCta: 'Visit the department',
     exploreCta: 'Explore research', workCta: 'Work with us',
-    peopleTitleA: 'The people reading ecology,', peopleTitleHl: 'writing', peopleTitleB: 'policy',
+    peopleTitleA: 'People reading data,', peopleTitleHl: 'writing', peopleTitleB: 'policy',
     scopeTitleFull: 'Research scope',
     coreThemes: ['Ecological planning', 'Climate adaptation', 'Environmental policy'],
     scales: [
