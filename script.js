@@ -301,10 +301,11 @@
       return card;
     }
 
-    // Same visual treatment as an Alumni card (degree badge, no research
-    // topic) — used for Alumni themselves, and for a 연구원 who has already
-    // graduated (has a Year of Graduation + Degree on file).
-    function buildAlumniStyleCard(name, sub, degreeText, photoFile, linksRaw, roleBadge) {
+    // Same badge treatment as an Alumni card (degree badge) — used for
+    // Alumni themselves (no topic, they're no longer active researchers)
+    // and for a 연구원/연구 인턴 who has already graduated but is still an
+    // active member (topic shown, since they're still doing research here).
+    function buildAlumniStyleCard(name, sub, degreeText, photoFile, linksRaw, roleBadge, topic) {
       var card = el('div', 'member-card alumni-card');
       var photo = el('div', 'member-photo alumni-photo');
       card.appendChild(photo);
@@ -320,6 +321,7 @@
       names.appendChild(el('p', 'kr-name', name));
       if (sub) names.appendChild(el('p', 'en-name', sub));
       textBlock.appendChild(names);
+      if (topic) textBlock.appendChild(el('p', 'member-topic kr', topic));
       card.appendChild(textBlock);
       var linkRow = buildLinkButtons(linksRaw);
       if (linkRow) card.appendChild(linkRow);
@@ -347,7 +349,8 @@
             : (state.lang === 'en' ? 'Research Intern' : '연구 인턴');
           if (isResearcherOrIntern && m['Year of Graduation'] && m['Degree']) {
             var degreeText = RosterHelpers.degreeLine(state.lang, m['Year of Graduation'], m['Degree']);
-            grid.appendChild(buildAlumniStyleCard(disp.name, disp.sub, degreeText, photoFile, m[URL_FIELD], roleBadge));
+            var graduatedTopic = RosterHelpers.cleanTopic(m['Research(ENG)']);
+            grid.appendChild(buildAlumniStyleCard(disp.name, disp.sub, degreeText, photoFile, m[URL_FIELD], roleBadge, graduatedTopic));
           } else {
             var topic = RosterHelpers.cleanTopic(m['Research(ENG)']);
             grid.appendChild(buildMemberCard(disp.name, disp.sub, topic, photoFile, m[URL_FIELD], roleBadge));
