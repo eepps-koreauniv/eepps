@@ -103,8 +103,15 @@
         }
       });
 
+      // "누적 논문" counts every paper ever (cumulative), but "진행 과제"
+      // only counts projects whose Status is literally "진행 중" (in
+      // progress) - not every row typed as a project.
       var counts = { journal: 0, project: 0, talk: 0 };
-      pubs.forEach(function (p) { if (counts.hasOwnProperty(p.category)) counts[p.category]++; });
+      pubs.forEach(function (p) {
+        if (p.category === 'journal') counts.journal++;
+        else if (p.category === 'project' && p.status === '진행 중') counts.project++;
+        else if (p.category === 'talk') counts.talk++;
+      });
 
       return { pubs: pubs, types: types, counts: counts };
     });
