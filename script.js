@@ -22,8 +22,8 @@
 
   var ROSTER = null; // populated by loadRoster() from the Google Sheet; null = use content.js placeholder data
   var PUBS = null; // populated by loadPublications() from the Google Sheet; null = use content.js placeholder data
-  var BOARD_POSTS = null; // populated by loadBoardManifest(); null = not loaded yet
-  var boardPostCache = {}; // slug -> { title, body } per language, so re-renders (lang toggle) don't refetch
+  var BOARD_POSTS = null; // populated by loadBoardPosts() from the Form response sheet; null = not loaded yet
+  var BOARD_PHOTOS = {}; // populated by loadBoardPhotos(): slug -> [filenames]
 
   function t() { return window.COPY[state.lang]; }
   function pad2(n) { return String(n).padStart(2, '0'); }
@@ -587,24 +587,26 @@
     var grid = el('div', 'board-grid');
     BOARD_POSTS.forEach(function (post) {
       var title = state.lang === 'en' ? (post.titleEn || post.titleKo) : (post.titleKo || post.titleEn);
+      var photoKey = BoardHelpers.matchPhotoKey(BOARD_PHOTOS, post.dateKey);
+      var photos = photoKey ? BOARD_PHOTOS[photoKey] : [];
       var card = el('div', 'board-card');
       var thumb = el('div', 'board-thumb');
       card.appendChild(thumb);
-      if (post.photos && post.photos.length) setBoardThumb(thumb, post.slug, post.photos[0]);
+      if (photos.length) setBoardThumb(thumb, photoKey, photos[0]);
       else { thumb.classList.add('stripe-pattern'); thumb.appendChild(el('span', 'stripe-caption', 'photo')); }
       var body = el('div', 'board-card-body');
       body.appendChild(el('p', 'board-card-title kr', title));
       body.appendChild(el('span', 'board-card-date', BoardHelpers.formatDate(post.date)));
       card.appendChild(body);
-      card.addEventListener('click', function () { location.hash = 'board/' + encodeURIComponent(post.slug); });
+      card.addEventListener('click', function () { location.hash = 'board/' + encodeURIComponent(post.id); });
       grid.appendChild(card);
     });
     container.appendChild(grid);
   }
 
   function renderBoardDetail(container, copy) {
-    var slug = state.boardSlug;
-    var post = BOARD_POSTS && BOARD_POSTS.find(function (p) { return p.slug === slug; });
+    var postId = state.boardSlug;
+    var post = BOARD_POSTS && BOARD_POSTS.find(function (p) { return p.id === postId; });
 
     var back = el('a', 'board-back', '← ' + copy.boardBackCta);
     back.href = '#board';
@@ -615,27 +617,17 @@
       return;
     }
 
-    var cacheKey = slug + '|' + state.lang;
-    var cached = boardPostCache[cacheKey];
-    if (!cached) {
-      container.appendChild(el('p', 'board-empty', '...'));
-      window.loadBoardPost(slug, state.lang).then(function (parsed) {
-        boardPostCache[cacheKey] = parsed;
-        if (state.boardSlug === slug) renderBoard(); // still viewing this post
-      }).catch(function (err) {
-        console.warn('Could not load board post', slug, err);
-        boardPostCache[cacheKey] = { title: post.titleKo || post.titleEn, body: '' };
-        if (state.boardSlug === slug) renderBoard();
-      });
-      return;
-    }
+    var title = state.lang === 'en' ? (post.titleEn || post.titleKo) : (post.titleKo || post.titleEn);
+    var body = state.lang === 'en' ? (post.bodyEn || post.bodyKo) : (post.bodyKo || post.bodyEn);
+    var photoKey = BoardHelpers.matchPhotoKey(BOARD_PHOTOS, post.dateKey);
+    var photos = photoKey ? BOARD_PHOTOS[photoKey] : [];
 
     var article = el('div');
     article.appendChild(el('p', 'board-detail-date', BoardHelpers.formatDate(post.date)));
-    article.appendChild(el('h3', 'board-detail-title', cached.title));
-    article.appendChild(el('p', 'board-detail-body kr', cached.body));
-    if (post.photos && post.photos.length) {
-      article.appendChild(buildBoardCarousel(post.photos, slug));
+    article.appendChild(el('h3', 'board-detail-title', title));
+    article.appendChild(el('p', 'board-detail-body kr', body));
+    if (photos.length) {
+      article.appendChild(buildBoardCarousel(photos, photoKey));
     }
     container.appendChild(article);
   }
@@ -769,13 +761,19 @@
       });
     }
 
-    if (window.loadBoardManifest) {
-      window.loadBoardManifest().then(function (posts) {
+    if (window.loadBoardPosts) {
+      window.loadBoardPosts().then(function (posts) {
         BOARD_POSTS = posts;
         renderBoard();
       }).catch(function (err) {
-        console.warn('Could not load board manifest.', err);
+        console.warn('Could not load board posts from the Form response sheet.', err);
         BOARD_POSTS = [];
+        renderBoard();
+      });
+    }
+    if (window.loadBoardPhotos) {
+      window.loadBoardPhotos().then(function (map) {
+        BOARD_PHOTOS = map || {};
         renderBoard();
       });
     }
