@@ -402,6 +402,7 @@ nav.pill-nav { display: flex; gap: 8px; justify-self: center; }
 }
 .board-card-date { font-size: 12.5px; color: var(--text-meta2); }
 .board-empty { padding: 40px 0; text-align: center; font-size: 14px; color: var(--text-meta2); }
+.board-list-toggle-wrap { display: flex; justify-content: center; margin-top: 24px; }
 
 .board-back {
   display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px;
@@ -412,9 +413,6 @@ nav.pill-nav { display: flex; gap: 8px; justify-self: center; }
 .board-detail-body {
   margin: 0 0 12px; max-width: 720px; font-family: 'Pretendard Variable', sans-serif;
   font-size: 16px; line-height: 1.8; color: var(--text-secondary); white-space: pre-line;
-}
-.board-detail-body.clamped {
-  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
 .board-body-toggle {
   display: inline-block; margin-bottom: 20px; font-size: 13.5px; color: var(--brand);

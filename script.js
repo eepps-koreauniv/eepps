@@ -18,7 +18,7 @@
     filterIdx: 0,
     expanded: false,
     boardSlug: null, // null = board list view; otherwise the open post's slug
-    boardBodyExpanded: false // whether the open post's body text is past the 3-line clamp
+    boardListExpanded: false // whether the board card grid shows more than 3 rows
   };
 
   var ROSTER = null; // populated by loadRoster() from the Google Sheet; null = use content.js placeholder data
@@ -583,6 +583,27 @@
     return wrap;
   }
 
+  // Hides any card sitting below the 3rd visual row of the grid (rows are
+  // found by grouping cards that share an offsetTop, since the grid's
+  // column count - and so what counts as "3 rows" - depends on viewport
+  // width). Returns how many cards got hidden.
+  function applyBoardRowLimit(grid, maxRows) {
+    var cards = Array.prototype.slice.call(grid.children);
+    cards.forEach(function (c) { c.style.display = ''; });
+    var tops = [];
+    cards.forEach(function (c) {
+      if (tops.indexOf(c.offsetTop) === -1) tops.push(c.offsetTop);
+    });
+    tops.sort(function (a, b) { return a - b; });
+    if (tops.length <= maxRows) return 0;
+    var cutoffTop = tops[maxRows - 1];
+    var hidden = 0;
+    cards.forEach(function (c) {
+      if (c.offsetTop > cutoffTop) { c.style.display = 'none'; hidden++; }
+    });
+    return hidden;
+  }
+
   function renderBoardList(container, copy) {
     if (!BOARD_POSTS || !BOARD_POSTS.length) {
       container.appendChild(el('p', 'board-empty', copy.boardEmpty));
@@ -606,6 +627,24 @@
       grid.appendChild(card);
     });
     container.appendChild(grid);
+
+    var toggleWrap = el('div', 'board-list-toggle-wrap');
+    if (!state.boardListExpanded) {
+      var hiddenCount = applyBoardRowLimit(grid, 3);
+      if (hiddenCount > 0) {
+        var expandBtn = el('button', 'pub-toggle', copy.boardExpandCta);
+        expandBtn.type = 'button';
+        expandBtn.addEventListener('click', function () { state.boardListExpanded = true; renderBoard(); });
+        toggleWrap.appendChild(expandBtn);
+        container.appendChild(toggleWrap);
+      }
+    } else {
+      var collapseBtn = el('button', 'pub-toggle', copy.boardCollapseCta);
+      collapseBtn.type = 'button';
+      collapseBtn.addEventListener('click', function () { state.boardListExpanded = false; renderBoard(); });
+      toggleWrap.appendChild(collapseBtn);
+      container.appendChild(toggleWrap);
+    }
   }
 
   function renderBoardDetail(container, copy) {
@@ -629,29 +668,11 @@
     var article = el('div');
     article.appendChild(el('p', 'board-detail-date', BoardHelpers.formatDate(post.date)));
     article.appendChild(el('h3', 'board-detail-title', title));
-
-    var bodyEl = el('p', 'board-detail-body kr' + (state.boardBodyExpanded ? '' : ' clamped'), body);
-    article.appendChild(bodyEl);
-    if (state.boardBodyExpanded) {
-      var collapseBtn = el('button', 'board-body-toggle', copy.boardCollapseCta);
-      collapseBtn.type = 'button';
-      collapseBtn.addEventListener('click', function () { state.boardBodyExpanded = false; renderBoard(); });
-      article.appendChild(collapseBtn);
-    }
-
+    article.appendChild(el('p', 'board-detail-body kr', body));
     if (photos.length) {
       article.appendChild(buildBoardCarousel(photos, photoKey));
     }
     container.appendChild(article);
-
-    // Only offer "더보기" if the clamp actually truncated something -
-    // needs to be measured after the element is in the live DOM.
-    if (!state.boardBodyExpanded && bodyEl.scrollHeight > bodyEl.clientHeight + 1) {
-      var expandBtn = el('button', 'board-body-toggle', copy.boardExpandCta);
-      expandBtn.type = 'button';
-      expandBtn.addEventListener('click', function () { state.boardBodyExpanded = true; renderBoard(); });
-      bodyEl.insertAdjacentElement('afterend', expandBtn);
-    }
   }
 
   function renderBoard() {
@@ -666,10 +687,17 @@
 
   function syncBoardStateFromHash() {
     var m = /^#board\/(.+)$/.exec(location.hash);
-    var nextSlug = m ? decodeURIComponent(m[1]) : null;
-    if (nextSlug !== state.boardSlug) state.boardBodyExpanded = false;
-    state.boardSlug = nextSlug;
+    state.boardSlug = m ? decodeURIComponent(m[1]) : null;
   }
+
+  // The board grid's column count (and so how many cards make up 3 rows)
+  // depends on viewport width, so the row cutoff needs recomputing on resize.
+  var boardResizeTimer = null;
+  window.addEventListener('resize', function () {
+    if (state.boardSlug || state.boardListExpanded) return; // detail view, or already fully shown
+    clearTimeout(boardResizeTimer);
+    boardResizeTimer = setTimeout(function () { renderBoard(); }, 200);
+  });
 
   window.addEventListener('hashchange', function () {
     syncBoardStateFromHash();
