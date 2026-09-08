@@ -17,7 +17,8 @@
     alumniOpen: false,
     filterIdx: 0,
     expanded: false,
-    boardSlug: null // null = board list view; otherwise the open post's slug
+    boardSlug: null, // null = board list view; otherwise the open post's slug
+    boardBodyExpanded: false // whether the open post's body text is past the 3-line clamp
   };
 
   var ROSTER = null; // populated by loadRoster() from the Google Sheet; null = use content.js placeholder data
@@ -628,11 +629,29 @@
     var article = el('div');
     article.appendChild(el('p', 'board-detail-date', BoardHelpers.formatDate(post.date)));
     article.appendChild(el('h3', 'board-detail-title', title));
-    article.appendChild(el('p', 'board-detail-body kr', body));
+
+    var bodyEl = el('p', 'board-detail-body kr' + (state.boardBodyExpanded ? '' : ' clamped'), body);
+    article.appendChild(bodyEl);
+    if (state.boardBodyExpanded) {
+      var collapseBtn = el('button', 'board-body-toggle', copy.boardCollapseCta);
+      collapseBtn.type = 'button';
+      collapseBtn.addEventListener('click', function () { state.boardBodyExpanded = false; renderBoard(); });
+      article.appendChild(collapseBtn);
+    }
+
     if (photos.length) {
       article.appendChild(buildBoardCarousel(photos, photoKey));
     }
     container.appendChild(article);
+
+    // Only offer "더보기" if the clamp actually truncated something -
+    // needs to be measured after the element is in the live DOM.
+    if (!state.boardBodyExpanded && bodyEl.scrollHeight > bodyEl.clientHeight + 1) {
+      var expandBtn = el('button', 'board-body-toggle', copy.boardExpandCta);
+      expandBtn.type = 'button';
+      expandBtn.addEventListener('click', function () { state.boardBodyExpanded = true; renderBoard(); });
+      bodyEl.insertAdjacentElement('afterend', expandBtn);
+    }
   }
 
   function renderBoard() {
@@ -647,7 +666,9 @@
 
   function syncBoardStateFromHash() {
     var m = /^#board\/(.+)$/.exec(location.hash);
-    state.boardSlug = m ? decodeURIComponent(m[1]) : null;
+    var nextSlug = m ? decodeURIComponent(m[1]) : null;
+    if (nextSlug !== state.boardSlug) state.boardBodyExpanded = false;
+    state.boardSlug = nextSlug;
   }
 
   window.addEventListener('hashchange', function () {

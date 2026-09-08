@@ -410,8 +410,15 @@ nav.pill-nav { display: flex; gap: 8px; justify-self: center; }
 .board-detail-date { font-size: 13px; color: var(--text-meta2); margin: 0 0 8px; }
 .board-detail-title { margin: 0 0 20px; font-size: 34px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
 .board-detail-body {
-  margin: 0 0 32px; max-width: 720px; font-family: 'Pretendard Variable', sans-serif;
+  margin: 0 0 12px; max-width: 720px; font-family: 'Pretendard Variable', sans-serif;
   font-size: 16px; line-height: 1.8; color: var(--text-secondary); white-space: pre-line;
+}
+.board-detail-body.clamped {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.board-body-toggle {
+  display: inline-block; margin-bottom: 20px; font-size: 13.5px; color: var(--brand);
+  border-bottom: 1px solid var(--border-6); padding-bottom: 2px;
 }
 .board-carousel {
   position: relative; height: 620px; border-radius: 16px;
