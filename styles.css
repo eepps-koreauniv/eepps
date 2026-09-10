@@ -312,6 +312,8 @@ nav.pill-nav { display: flex; gap: 8px; justify-self: center; }
 .member-names .kr-name { margin: 0; font-size: 23px; font-weight: 600; letter-spacing: -0.02em; }
 .member-names .en-name { margin: 0; font-size: 14px; color: var(--text-meta); }
 .member-topic { margin: 0; font-family: 'Pretendard Variable', sans-serif; font-size: 15px; line-height: 1.5; color: var(--text-secondary); }
+.member-signature { margin: 6px 0 0; font-size: 9px; color: #9ab08a; text-align: center; opacity: 0; transition: opacity .4s ease; }
+.member-card:hover .member-signature { opacity: 0.6; }
 
 .alumni-top { display: flex; align-items: center; justify-content: space-between; }
 .alumni-badges { display: flex; gap: 12px; flex-wrap: wrap; }

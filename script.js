@@ -353,7 +353,9 @@
             grid.appendChild(buildAlumniStyleCard(disp.name, disp.sub, degreeText, photoFile, m[URL_FIELD], roleBadge, graduatedTopic));
           } else {
             var topic = RosterHelpers.cleanTopic(m['Research(ENG)']);
-            grid.appendChild(buildMemberCard(disp.name, disp.sub, topic, photoFile, m[URL_FIELD], roleBadge));
+            var memberCard = buildMemberCard(disp.name, disp.sub, topic, photoFile, m[URL_FIELD], roleBadge);
+            if (m['NO'] === '31') memberCard.appendChild(el('p', 'member-signature', 'i made it!'));
+            grid.appendChild(memberCard);
           }
         });
         wrap.appendChild(grid);
