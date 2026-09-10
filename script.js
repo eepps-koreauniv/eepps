@@ -14,7 +14,6 @@
   var state = {
     lang: 'ko',
     section: 'main',
-    alumniOpen: false,
     filterIdx: 0,
     expanded: false,
     boardSlug: null, // null = board list view; otherwise the open post's slug
@@ -386,16 +385,9 @@
     alumniHead.appendChild(el('p', 'group-label', copy.alumniLabel));
     alumniHead.appendChild(el('span', 'group-count kr', pad2(alumniList.length)));
     alumniHead.appendChild(el('span', 'group-rule'));
-    var alumniBtn = el('button', 'group-toggle', state.alumniOpen ? copy.alumniCloseCta : copy.alumniOpenCta);
-    alumniBtn.type = 'button';
-    alumniBtn.addEventListener('click', function () {
-      state.alumniOpen = !state.alumniOpen;
-      renderPeople();
-    });
-    alumniHead.appendChild(alumniBtn);
     alumniWrap.appendChild(alumniHead);
 
-    if (state.alumniOpen) {
+    {
       var alumniGrid = el('div', 'member-grid');
       alumniList.forEach(function (a) {
         var name, sub, degree, photoFile, linksRaw;
