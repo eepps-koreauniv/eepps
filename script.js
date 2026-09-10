@@ -425,7 +425,8 @@
           venue: p.authors,
           badgeLabel: state.lang === 'en' ? (p.typeEn || p.typeKo) : p.typeKo,
           badgeTint: p.category === 'journal' ? 'k1' : p.category === 'talk' ? 'k3' : 'k2',
-          link: p.link
+          link: p.link,
+          status: p.status
         };
       });
       filterDefs = [{ label: state.lang === 'en' ? 'All' : '전체', match: function () { return true; } }]
@@ -470,7 +471,11 @@
       var row = el('div', 'pub-row');
       row.appendChild(el('span', 'year', p.year));
       row.appendChild(el('span', 'pub-badge ' + p.badgeTint, p.badgeLabel));
-      row.appendChild(el('p', 'title kr', p.title));
+      var titleP = el('p', 'title kr', p.title);
+      if (p.status === '진행 중') {
+        titleP.appendChild(el('span', 'pub-status-badge', state.lang === 'en' ? 'In Progress' : '진행중'));
+      }
+      row.appendChild(titleP);
       row.appendChild(el('span', 'venue', p.venue));
       if (p.link) {
         var link = el('a', 'link', '↗');

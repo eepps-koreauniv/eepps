@@ -67,6 +67,13 @@
     return m ? m[1] : '';
   }
 
+  // Full year/month/day timestamp for sorting (dates look like "2024. 9. 25").
+  function parseFullDate(dateStr) {
+    var m = /(\d{4})\s*[.\-/]\s*(\d{1,2})\s*[.\-/]\s*(\d{1,2})/.exec(dateStr || '');
+    if (!m) return NaN;
+    return new Date(+m[1], +m[2] - 1, +m[3]).getTime();
+  }
+
   window.loadPublications = function () {
     return fetch(window.PUBS_CSV_URL).then(function (res) {
       if (!res.ok) throw new Error('Publications CSV fetch failed: ' + res.status);
@@ -80,6 +87,7 @@
         var typeKo = (r['Type(KOR)'] || '').trim();
         return {
           year: parseYear(r['Date']),
+          dateSort: parseFullDate(r['Date']),
           titleKo: (r['Title(KOR)'] || '').trim(),
           titleEn: (r['Title(ENG)'] || '').trim(),
           typeKo: typeKo,
@@ -91,7 +99,11 @@
         };
       });
 
-      pubs.sort(function (a, b) { return (parseInt(b.year, 10) || 0) - (parseInt(a.year, 10) || 0); });
+      pubs.sort(function (a, b) {
+        var ta = isNaN(a.dateSort) ? -Infinity : a.dateSort;
+        var tb = isNaN(b.dateSort) ? -Infinity : b.dateSort;
+        return tb - ta;
+      });
 
       // Distinct (typeKo, typeEn) pairs in first-seen order, for filter buttons.
       var seen = {};
