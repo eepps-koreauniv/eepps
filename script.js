@@ -17,7 +17,8 @@
     filterIdx: 0,
     expanded: false,
     boardSlug: null, // null = board list view; otherwise the open post's slug
-    boardListExpanded: false // whether the board card grid shows more than 3 rows
+    boardListExpanded: false, // whether the board card grid shows more than 3 rows
+    showInProgress: false // whether in-progress ("진행 중") projects are included in the research list
   };
 
   var ROSTER = null; // populated by loadRoster() from the Google Sheet; null = use content.js placeholder data
@@ -168,7 +169,7 @@
 
       // Real map images are available for local/regional/national; international
       // still has no asset, so it keeps the striped placeholder.
-      var SCALE_MAP_BASENAMES = ['scope-local', 'scope-regional', 'scope-national', null];
+      var SCALE_MAP_BASENAMES = ['scope-local', 'scope-regional', 'scope-national', 'scope-international'];
       var map = el('div', 'scale-map');
       setScopeMapImage(map, SCALE_MAP_BASENAMES[i], label, mapNote);
       card.appendChild(map);
@@ -450,6 +451,9 @@
 
     if (state.filterIdx >= filterDefs.length) state.filterIdx = 0; // guard against a stale index from before the sheet loaded
 
+    var inProgressCount = allPubs.filter(function (p) { return p.status === '진행 중'; }).length;
+    var basePubs = state.showInProgress ? allPubs : allPubs.filter(function (p) { return p.status !== '진행 중'; });
+
     var filters = document.getElementById('filters');
     filters.innerHTML = '';
     filterDefs.forEach(function (f, i) {
@@ -462,8 +466,19 @@
       });
       filters.appendChild(btn);
     });
+    if (inProgressCount > 0) {
+      var inProgressBtn = el('button', 'filter-pill pub-inprogress-toggle' + (state.showInProgress ? ' active' : ''),
+        (state.showInProgress ? copy.pubInProgressHide : copy.pubInProgressShow) + ' (' + inProgressCount + ')');
+      inProgressBtn.type = 'button';
+      inProgressBtn.addEventListener('click', function () {
+        state.showInProgress = !state.showInProgress;
+        state.expanded = false;
+        renderResearch();
+      });
+      filters.appendChild(inProgressBtn);
+    }
 
-    var matched = allPubs.filter(filterDefs[state.filterIdx].match);
+    var matched = basePubs.filter(filterDefs[state.filterIdx].match);
     var hasMore = matched.length > PUB_PAGE_SIZE;
     var shown = hasMore && !state.expanded ? matched.slice(0, PUB_PAGE_SIZE) : matched;
 
@@ -739,20 +754,22 @@
   // The photo list itself is never hardcoded here — it's read from
   // assets/hero/manifest.json, which just lists whatever is in that folder.
   // Run scripts/update-hero-manifest.ps1 after adding/removing photos there.
-  function heroPlaceholder(container) {
+  function heroPlaceholder(container, caption) {
     container.classList.add('stripe-pattern');
-    container.appendChild(el('span', 'stripe-caption', 'lab / field research photo'));
+    container.appendChild(el('span', 'stripe-caption', caption || 'lab / field research photo'));
   }
 
-  function initHeroSlideshow() {
-    var container = document.getElementById('hero-image');
+  // Reused for both the hero image and the contact section's group photo -
+  // both cycle through the same assets/hero/ photo set.
+  function initSlideshow(containerId, placeholderCaption) {
+    var container = document.getElementById(containerId);
     if (!container) return;
 
     fetch('assets/hero/manifest.json').then(function (res) {
       if (!res.ok) throw new Error('manifest fetch failed: ' + res.status);
       return res.json();
     }).then(function (filenames) {
-      if (!filenames || !filenames.length) { heroPlaceholder(container); return; }
+      if (!filenames || !filenames.length) { heroPlaceholder(container, placeholderCaption); return; }
 
       var slides = filenames.map(function (name, i) {
         var img = document.createElement('img');
@@ -777,14 +794,15 @@
       }, HERO_SLIDE_MS);
     }).catch(function (err) {
       console.warn('Could not load hero photo manifest — showing placeholder.', err);
-      heroPlaceholder(container);
+      heroPlaceholder(container, placeholderCaption);
     });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     syncBoardStateFromHash();
     renderAll(); // render immediately with placeholder data so the page isn't blank while the sheet loads
-    initHeroSlideshow();
+    initSlideshow('hero-image', 'lab / field research photo');
+    initSlideshow('contact-photo', 'lab group photo');
     SECTION_IDS.forEach(function (id) {
       var target = document.getElementById(id);
       if (target) observer.observe(target);

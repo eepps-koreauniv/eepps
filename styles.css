@@ -332,6 +332,8 @@ nav.pill-nav { display: flex; gap: 8px; justify-self: center; }
   border: 1px solid var(--border-4); background: #fff; color: var(--text-meta);
 }
 .filter-pill.active { border-color: transparent; background: var(--brand); color: #ffffff; }
+.pub-inprogress-toggle { margin-left: 4px; border-color: #f0e0ad; color: #8a6116; }
+.pub-inprogress-toggle.active { border-color: transparent; background: #fef3c7; color: #8a6116; }
 
 .pub-row {
   display: grid; grid-template-columns: 58px 150px 1fr 200px 30px; gap: 16px; align-items: center;
