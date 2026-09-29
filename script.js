@@ -17,8 +17,7 @@
     filterIdx: 0,
     expanded: false,
     boardSlug: null, // null = board list view; otherwise the open post's slug
-    boardListExpanded: false, // whether the board card grid shows more than 3 rows
-    showInProgress: true // whether in-progress ("진행 중") projects are included in the research list
+    boardListExpanded: false // whether the board card grid shows more than 3 rows
   };
 
   var ROSTER = null; // populated by loadRoster() from the Google Sheet; null = use content.js placeholder data
@@ -451,9 +450,6 @@
 
     if (state.filterIdx >= filterDefs.length) state.filterIdx = 0; // guard against a stale index from before the sheet loaded
 
-    var inProgressCount = allPubs.filter(function (p) { return p.status === '진행 중'; }).length;
-    var basePubs = state.showInProgress ? allPubs : allPubs.filter(function (p) { return p.status !== '진행 중'; });
-
     var filters = document.getElementById('filters');
     filters.innerHTML = '';
     filterDefs.forEach(function (f, i) {
@@ -466,19 +462,8 @@
       });
       filters.appendChild(btn);
     });
-    if (inProgressCount > 0) {
-      var inProgressBtn = el('button', 'filter-pill pub-inprogress-toggle' + (state.showInProgress ? ' active' : ''),
-        (state.showInProgress ? copy.pubInProgressHide : copy.pubInProgressShow) + ' (' + inProgressCount + ')');
-      inProgressBtn.type = 'button';
-      inProgressBtn.addEventListener('click', function () {
-        state.showInProgress = !state.showInProgress;
-        state.expanded = false;
-        renderResearch();
-      });
-      filters.appendChild(inProgressBtn);
-    }
 
-    var matched = basePubs.filter(filterDefs[state.filterIdx].match);
+    var matched = allPubs.filter(filterDefs[state.filterIdx].match);
     var hasMore = matched.length > PUB_PAGE_SIZE;
     var shown = hasMore && !state.expanded ? matched.slice(0, PUB_PAGE_SIZE) : matched;
 
