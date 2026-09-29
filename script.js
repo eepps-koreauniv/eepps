@@ -18,7 +18,7 @@
     expanded: false,
     boardSlug: null, // null = board list view; otherwise the open post's slug
     boardListExpanded: false, // whether the board card grid shows more than 3 rows
-    showInProgress: false // whether in-progress ("진행 중") projects are included in the research list
+    showInProgress: true // whether in-progress ("진행 중") projects are included in the research list
   };
 
   var ROSTER = null; // populated by loadRoster() from the Google Sheet; null = use content.js placeholder data
