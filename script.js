@@ -249,6 +249,27 @@
       copy.peopleTitleA + ' <span class="hl">' + copy.peopleTitleHl + '</span> ' + copy.peopleTitleB;
     document.getElementById('pi-email-cta').textContent = copy.emailCta + ' ↗';
 
+    var piDetails = document.getElementById('pi-details');
+    piDetails.innerHTML = '';
+    piDetails.className = ''; // reset in case a previous render added 'pi-details'
+    if (state.lang === 'ko' && copy.piEducation) {
+      piDetails.className = 'pi-details';
+      [
+        [copy.piEducationLabel, copy.piEducation],
+        [copy.piExperienceLabel, copy.piExperience],
+        [copy.piAwardsLabel, copy.piAwards]
+      ].forEach(function (pair) {
+        var label = pair[0], items = pair[1];
+        if (!items || !items.length) return;
+        var block = el('div', 'pi-details-block');
+        block.appendChild(el('h4', null, label));
+        var list = el('ul');
+        items.forEach(function (line) { list.appendChild(el('li', 'kr', line)); });
+        block.appendChild(list);
+        piDetails.appendChild(block);
+      });
+    }
+
     var R = ROSTER && window.RosterHelpers;
 
     // ---- PI card ----
