@@ -252,7 +252,7 @@
     var piDetails = document.getElementById('pi-details');
     piDetails.innerHTML = '';
     piDetails.className = ''; // reset in case a previous render added 'pi-details'
-    if (state.lang === 'ko' && copy.piEducation) {
+    if (copy.piEducation) {
       piDetails.className = 'pi-details';
       [
         [copy.piEducationLabel, copy.piEducation],
@@ -264,7 +264,7 @@
         var block = el('div', 'pi-details-block');
         block.appendChild(el('h4', null, label));
         var list = el('ul');
-        items.forEach(function (line) { list.appendChild(el('li', 'kr', line)); });
+        items.forEach(function (line) { list.appendChild(el('li', state.lang === 'ko' ? 'kr' : null, line)); });
         block.appendChild(list);
         piDetails.appendChild(block);
       });

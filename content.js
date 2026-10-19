@@ -117,7 +117,7 @@ window.COPY = {
     teamCta: 'Our Team',
     deptCardTitle: 'Korea University\nDiv. of Environmental Science & Ecological Engineering', deptCardCta: 'Visit the department',
     exploreCta: 'Explore research', workCta: 'Work with us',
-    peopleTitleA: 'People reading data,', peopleTitleHl: 'writing', peopleTitleB: 'policy',
+    peopleTitleA: '', peopleTitleHl: 'People', peopleTitleB: 'reading data, writing policy',
     scopeTitleFull: 'Research scope',
     coreThemes: ['Ecological planning', 'Climate adaptation', 'Environmental policy'],
     scales: [
@@ -126,9 +126,38 @@ window.COPY = {
       ['National scale', '국가적 규모', ['National environmental plan, strategic assessment', 'Environmental assessment mapping & institutionalisation'], 'national assessment map'],
       ['International scale', '국제적 규모', ['Climate impact and vulnerability assessment', 'Climate adaptation policy'], 'climate scenario maps']
     ],
-    piRole: 'Principal Investigator', piName: 'Prof. Gildong Hong', piNameSub: '홍길동',
+    piRole: 'Professor', piName: 'Prof. Gildong Hong', piNameSub: '홍길동',
     piBio: 'Ecological planning, ecosystem service assessment, national and urban environmental policy. Ph.D. in Environmental Planning.',
     emailCta: 'Send an email',
+    piEducationLabel: 'Education',
+    piEducation: [
+      'Ph.D. (1994–2000): Interdisciplinary Program in Landscape Architecture, Graduate School of Environmental Studies, Seoul National University',
+      'M.S. (1991–1993): Dept. of Ecological Landscape Architecture, Graduate School, Seoul National University',
+      'B.S. (1987–1991): Dept. of Landscape Architecture, College of Agriculture, Seoul National University'
+    ],
+    piExperienceLabel: 'Professional Experiences',
+    piExperience: [
+      '2015.03 – Present: Professor, Division of Environmental Science and Ecological Engineering, Korea University',
+      '2011.11 – 2015.02: Senior Research Fellow, Korea Environment Institute',
+      '2004.02 – 2011.10: Research Fellow, Korea Environment Institute',
+      '1999.09 – 2004.01: Senior Researcher, Policy Research Division, Korea Environment Institute',
+      '1997.09 – 1999.08: Researcher, Policy Research Division, Korea Environment Institute',
+      '1994.07 – 1997.08: Researcher, Korea Institute of Environmental Science and Technology',
+      '1993.09 – 1994.06: Research Associate, Korea Institute of Environmental Science and Technology',
+      '1993.03 – 1993.08: Senior Researcher, Asia-Pacific Environmental Management Institute'
+    ],
+    piAwardsLabel: 'Awards',
+    piAwards: [
+      'Oct. 2013: Presidential Citation (Merit for Natural Environment Conservation)',
+      'Jul. 2013: Commendation from the Institute President (Outstanding Research Report, 2012)',
+      'May 2012: Excellent Researcher Award (2011 Evaluation)',
+      'Jun. 2011: Commendation from the Institute President (Outstanding Contribution to National Policy, 2010)',
+      'Jul. 2009: Commendation from the Institute President (Outstanding Training Report, 2008)',
+      'Jun. 2004: Commendation from the Institute President (Best Training Report, 2003)',
+      'Jun. 2003: Commendation from the Institute President (Best Training Report, 2002)',
+      'Jun. 1999: Minister of Environment Citation (Merit for Environmental Conservation)',
+      'Dec. 1998: Commendation from the Institute President (Model Employee)'
+    ],
     researchTitleA: '', researchTitleHl: 'Research', researchTitleB: 'output',
     pubPanelTitle: 'Key Research Outputs', pubAllCta: 'Request full list',
     pubExpand: 'Show all (+{n}) ↓', pubCollapse: 'Show less ↑',
