@@ -3,6 +3,9 @@
 # the site itself never needs a filename edited in its code.
 $heroDir = Join-Path $PSScriptRoot "..\assets\hero"
 
+# Shrink any newly added full-size photos to web size first.
+& (Join-Path $PSScriptRoot "compress-photos.ps1") -Path $heroDir -MaxSize 2400 -Quality 85
+
 $files = Get-ChildItem $heroDir -File | Where-Object { $_.Extension -match '^\.(jpg|jpeg|png|webp)$' }
 $sorted = $files | Sort-Object {
   $n = 0

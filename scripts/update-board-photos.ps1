@@ -11,6 +11,9 @@ if (-not (Test-Path $boardDir)) {
   New-Item -ItemType Directory -Path $boardDir -Force | Out-Null
 }
 
+# Shrink any newly added full-size photos (e.g. KakaoTalk originals) to web size first.
+& (Join-Path $PSScriptRoot "compress-photos.ps1") -Path $boardDir
+
 $map = [ordered]@{}
 Get-ChildItem $boardDir -Directory | Sort-Object Name | ForEach-Object {
   $slug = $_.Name
